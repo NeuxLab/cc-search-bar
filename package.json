@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "cc-scroller": "git+https://github.com/ppninja/cc-scroller.git"
+    "cc-scroller": "git+https://github.com/NeuxLab/cc-scroller.git"
   },
   "author": "gock",
   "license": "MIT",
