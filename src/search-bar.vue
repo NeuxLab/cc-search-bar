@@ -70,11 +70,10 @@ export default {
       }
     },
     done() {
-      this.autocomplete();
-      this.$emit("complete");
+      this.$emit("complete", { result: this.suggestions[this.current], query: this.searchkey });
     },
-    reset() {
-      this.searchkey = ""
+    reset(v) {
+      this.searchkey = v || ""
       this.clearCurrent();
     },
     focus(){
