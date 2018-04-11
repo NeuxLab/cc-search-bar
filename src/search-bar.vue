@@ -50,8 +50,10 @@ export default {
   },
   watch: {
     searchkey: function(newValue) {
-      let vm = this
-
+      if (this.completed) {
+        this.completed = false;
+        return;
+      }
       this.data(newValue).then((data) => {
         this.suggestions = data
         this.$nextTick( () => {
@@ -70,7 +72,12 @@ export default {
       }
     },
     done() {
+      if (this.current >= 0) {
+        this.searchkey = this.suggestions[this.current];
+      }
       this.$emit("complete", { result: this.suggestions[this.current], query: this.searchkey });
+      this.suggestions = [];
+      this.completed = true;
     },
     reset(v) {
       this.searchkey = v || ""
@@ -86,10 +93,16 @@ export default {
         this.$refs['input'].blur()
       })
     },
-    prevCurrent() {
+    prevCurrent(event) {
+      if (this.hasItems) {
+        event.stopPropagation();
+      }
       this.$refs['scroller'].prevCurrent() || this.clearCurrent();
     },
-    nextCurrent() {
+    nextCurrent(event) {
+      if (this.hasItems) {
+        event.stopPropagation();
+      }
       this.$refs['scroller'].nextCurrent() || this.clearCurrent();
     },
     setCurrent(i) {
