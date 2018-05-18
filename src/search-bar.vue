@@ -6,8 +6,8 @@
       <i class='icon' :class="[icon || 'icon-search']"></i>
     </div>
     <div class='typeahead-list select-list' v-show="hasItems">
-      <scroller class='list-group search-bar-typeahead-scroller' :horizontal="horizontal" :scrollable="scrollable" :items="suggestions" ref='scroller' v-on:current-change="current = $event" v-on:item-click="autocomplete">
-        <div class='item' slot-scope="{item, index}" v-on:mouseenter="$refs['scroller'].setCurrent(index)" v-on:mouseleave="$refs['scroller'].clearCurrent()">
+      <scroller class='list-group search-bar-typeahead-scroller' :horizontal="horizontal" :scrollable="scrollable" :items="suggestions" ref='scroller' v-on:current-change="current = $event">
+        <div class='item' slot-scope="{item, index}" v-on:mouseenter="$refs['scroller'].setCurrent(index)" v-on:mouseleave="$refs['scroller'].clearCurrent()" @click="done">
           <slot :index="index" :item="item"></slot>
         </div>
       </scroller>
