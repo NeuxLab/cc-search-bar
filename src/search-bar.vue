@@ -1,5 +1,5 @@
 <template>
-  <div class='search-bar '>
+  <div class='search-bar'>
     <div class='input-icon-group'>
       <input class='input-search hint' type='text' readonly autocomplete="off" spellcheck="false" dir="ltr" :placeholder="hint">
       <input class='input-search input active' type="text" :placeholder="placeholder" v-model="searchkey" ref='input' @keydown.tab.prevent="autocomplete" @keydown.up.prevent="prevCurrent" @keydown.down.prevent="nextCurrent" @keydown.enter="done">
@@ -27,7 +27,8 @@ export default {
     return {
       searchkey: null,
       suggestions: [],
-      current: -1
+      current: -1,
+      completed: false
     }
   },
   props: ['data', 'label', 'scrollable', 'horizontal', 'tooltip', 'icon'],
@@ -50,8 +51,12 @@ export default {
   },
   watch: {
     searchkey: function(newValue) {
+      if (this.completed == 2) {
+        this.completed = false
+      }
       if (this.completed) {
-        this.completed = false;
+        // this is revoked after complete = true. We need to keep complete != false until next change.
+        this.completed = 2;
         return;
       }
       this.data(newValue).then((data) => {
@@ -94,13 +99,13 @@ export default {
       })
     },
     prevCurrent(event) {
-      if (this.hasItems) {
+      if (!this.completed) {
         event.stopPropagation();
       }
       this.$refs['scroller'].prevCurrent() || this.clearCurrent();
     },
     nextCurrent(event) {
-      if (this.hasItems) {
+      if (!this.completed) {
         event.stopPropagation();
       }
       this.$refs['scroller'].nextCurrent() || this.clearCurrent();
@@ -125,6 +130,9 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    &:before {
+      margin-right: 0;
+    }
   }
   .hint {
     position: absolute;
@@ -140,6 +148,8 @@ export default {
     vertical-align: top;
     background-color: transparent;
   }
-
+  .scroller-wrapper.list-group {
+    margin-top: 10px;
+  }
 }
 </style>
