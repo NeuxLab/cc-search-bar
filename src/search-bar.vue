@@ -77,12 +77,14 @@ export default {
       }
     },
     done() {
-      if (this.current >= 0) {
-        this.searchkey = this.suggestions[this.current];
+      if (this.current >= 0 && this.hasItems) {
+        this.searchkey = this.label(this.suggestions[this.current]);
       }
       this.$emit("complete", { result: this.suggestions[this.current], query: this.searchkey });
       this.suggestions = [];
       this.completed = true;
+      // mouse click
+      this.$refs['input'].focus()
     },
     reset(v) {
       this.searchkey = v || ""
@@ -99,13 +101,13 @@ export default {
       })
     },
     prevCurrent(event) {
-      if (!this.completed) {
+      if (!this.completed && this.hasItems) {
         event.stopPropagation();
       }
       this.$refs['scroller'].prevCurrent() || this.clearCurrent();
     },
     nextCurrent(event) {
-      if (!this.completed) {
+      if (!this.completed && this.hasItems) {
         event.stopPropagation();
       }
       this.$refs['scroller'].nextCurrent() || this.clearCurrent();
