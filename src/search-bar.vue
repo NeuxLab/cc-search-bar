@@ -2,7 +2,7 @@
   <div class='search-bar'>
     <div class='input-icon-group'>
       <input class='input-search hint' type='text' readonly autocomplete="off" spellcheck="false" dir="ltr" :placeholder="hint">
-      <input class='input-search input active' type="text" :placeholder="placeholder" v-model="searchkey" ref='input' @keydown.tab.prevent="autocomplete" @keydown.up.prevent="prevCurrent" @keydown.down.prevent="nextCurrent" @keydown.enter="done">
+      <input class='input-search input active native-key-bindings' type="text" :placeholder="placeholder" v-model="searchkey" ref='input' @keydown.tab.prevent="autocomplete" @keydown.up.prevent="prevCurrent" @keydown.down.prevent="nextCurrent" @keydown.enter="done">
       <i class='icon' :class="[icon || 'icon-search']"></i>
     </div>
     <div class='typeahead-list select-list' v-show="hasItems">
