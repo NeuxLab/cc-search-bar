@@ -2,7 +2,7 @@
   <div class='search-bar'>
     <div class='input-icon-group'>
       <input class='input-search hint' type='text' readonly autocomplete="off" spellcheck="false" dir="ltr" :placeholder="hint">
-      <input class='input-search input active native-key-bindings' type="text" :placeholder="placeholder" v-model="searchkey" ref='input' @keydown.tab.prevent="autocomplete" @keydown.up.prevent="prevCurrent" @keydown.down.prevent="nextCurrent" @keydown.enter="done">
+      <input class='input-search input active native-key-bindings' type="text" :placeholder="placeholder" v-model="searchkey" ref='input' @keydown="onKeyDown" @keydown.tab.prevent="autocomplete" @keydown.up.prevent="prevCurrent" @keydown.down.prevent="nextCurrent" @keydown.enter="onEnter" >
       <i class='icon' :class="[icon || 'icon-search']"></i>
     </div>
     <div class='typeahead-list select-list' v-show="hasItems">
@@ -47,6 +47,9 @@ export default {
       } else {
         return ''
       }
+    },
+    disableIME() {
+      return this.$attrs["ime-off"] !== undefined
     }
   },
   watch: {
@@ -117,6 +120,27 @@ export default {
     },
     clearCurrent() {
       this.$refs['scroller'].clearCurrent()
+    },
+    onKeyDown(event) {
+      if (!this.disableIME) return;
+
+      //it may be in composing already
+      if (event.keyCode == 229) {
+        this.searchkey += event.key
+      }
+      if (/[a-z0-9]/i.test(String.fromCharCode(event.keyCode))) {
+        this.searchkey += String.fromCharCode(event.keyCode).toLowerCase();
+      }
+      if (event.keyCode == 8) {
+        this.searchkey = this.searchkey.substr(0, this.searchkey.length - 1)
+      }
+
+      // make it readonly to disable ime
+      this.$refs['input'].setAttribute('readonly', 'readonly')
+    },
+    onEnter(event) {
+      if (event.isComposing) return;
+      this.done();
     }
   }
 }
