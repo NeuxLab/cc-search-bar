@@ -123,10 +123,13 @@ export default {
     },
     onKeyDown(event) {
       if (!this.disableIME) return;
-
       //it may be in composing already
       if (event.keyCode == 229) {
-        this.searchkey += event.key
+        if (event.key.length == 1) {
+          this.searchkey += event.key
+        } else {
+          this.searchkey += event.code.replace(/key/i, "").toLowerCase();
+        }
       }
       if (/[a-z0-9]/i.test(String.fromCharCode(event.keyCode))) {
         this.searchkey += String.fromCharCode(event.keyCode).toLowerCase();
